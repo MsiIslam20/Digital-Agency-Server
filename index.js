@@ -27,14 +27,7 @@ client.connect(err => {
         const title = req.body.title;
         const description = req.body.description;
         const img = file.name;
-        // const newImg = file.data;
-        // const encImg = newImg.toString('base64');
-
-        // var image = {
-        //     contentType: file.mimetype,
-        //     size: file.size,
-        //     img: Buffer.from(encImg, 'base64')
-        // };
+        
         serviceCollection.insertOne({title, description,  img})
         .then(result => {
             res.send(result.insertedCount > 0);
@@ -54,10 +47,10 @@ client.connect(err => {
     });
 
     app.post("/makeAdmin", (req, res) => {
-        const product = req.body;
-        adminsCollection.insertMany(product)
+        const admins = req.body;
+        adminsCollection.insertOne(admins)
         .then(result => {
-            res.send(result.insertedCount);
+            res.send(result.insertedCount > 0);
         })
     });
 
@@ -110,6 +103,14 @@ client.connect(err => {
         .toArray( (err, documents) => {
             res.send(documents);
         })
+    });
+
+    app.post('/isAdmin', (req, res) => {
+        const email = req.body.email;
+        adminsCollection.find({ email: email })
+            .toArray((err, doctors) => {
+                res.send(doctors.length > 0);
+            })
     });
 
 });
