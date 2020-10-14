@@ -1,15 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const fileUpload = require('express-fileupload')
+const fileUpload = require('express-fileupload');
 require('dotenv').config();
 const ObjectId = require('mongodb').ObjectId;
 const MongoClient = require('mongodb').MongoClient;
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.8ar8f.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 const app = express();
-app.use(bodyParser.json());
 app.use(cors());
+app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('admins'));
 app.use(fileUpload());
 
@@ -112,6 +113,16 @@ client.connect(err => {
                 res.send(doctors.length > 0);
             })
     });
+
+    app.patch("/update/:id", (req, res) => {
+        ordersCollection.updateOne({_id : ObjectId(req.params.id)},
+            {
+                $set: {status: req.body.status}
+            })
+            .then(result => {
+                res.send(result.modifiedCount > 0);
+            })
+    })
 
 });
 
