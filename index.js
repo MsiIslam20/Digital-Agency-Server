@@ -10,10 +10,8 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('admins'));
 app.use(fileUpload());
-
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true  });
 
@@ -41,10 +39,6 @@ client.connect(err => {
             }
             return res.send({name: file.name, path: `/${file.name}`})
         })
-        // serviceCollection.insertMany(service)
-        // .then(result => {
-        //     res.send(result.insertedCount);
-        // })
     });
 
     app.post("/makeAdmin", (req, res) => {
@@ -123,12 +117,10 @@ client.connect(err => {
                 res.send(result.modifiedCount > 0);
             })
     })
-
 });
 
-
 app.get('/', (req, res) => {
-    res.send('Running with Node js and MongoDB Database')
+    res.send('Welcome to Backend Server...!!!!!')
 })
 
 app.listen(process.env.PORT || 4000)
