@@ -34,7 +34,6 @@ client.connect(err => {
 
         file.mv(`${__dirname}/admins/${file.name}`, err => {
             if(err){
-                console.log(err);
                 return res.status(500).send({msg: "failed to Upload"})
             }
             return res.send({name: file.name, path: `/${file.name}`})
